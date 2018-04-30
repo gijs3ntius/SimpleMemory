@@ -1,38 +1,41 @@
 // Javascript file functioning as the core of the memory game
 // this file is written by Gijs Entius
 
-// game running boolean
 var running = false;
+
 // used to store the colours in when a new game is started
 var colourOpen;
 var colourClosed;
 var colourFound;
-var closedCardText;
-// time the game is running in seconds
-var time;
+var closedCardText; // text displayed in closed cards
+
+var time; // time the game is running in seconds
 var timeIntervalID = null;
 var timeLeft; // modified by the game difficulty
 var timeLeftModifiedWidth;
 var timeLeftIntervalID = null;
+
 //variables that hold all data regarding game objects 
 var openCardOne = null;
 var openCardTwo = null;
 var cardsValues = [];
 var foundCards = [];
-// highscores per quantity of cards
+
+// highscores per difficulty
 var highScores = [
 	[], //difficulty A
 	[], // difficulty B
 	[], // difficulty C
 ];
-// game difficulty
+
+// game size and difficulty
 var size;
 var difficulty;
 
 //source: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
 function shuffle(array) {
 var currentIndex = array.length, temporaryValue, randomIndex;
-// While there remain elements to shuffle...
+    // While there remain elements to shuffle...
 	while (0 !== currentIndex) {
 		// Pick a remaining element...
 		randomIndex = Math.floor(Math.random() * currentIndex);
@@ -58,21 +61,26 @@ function isInArray(array, card) {
 }
 
 function showHighscores() {
-	var highscoresLocal;
+	var localHighScores;
 	if(difficulty !== null) {
-		highscoresLocal = highScores[difficulty];
+		localHighScores = highScores[difficulty];
 	} else {
 		// show standard highscores because apparently size is not set
-		highscoresLocal = highScores[2]; // size 6 highscores
+		localHighScores = highScores[2]; // size 6 highscores
 	}
-	// show highscores
+    // show highscores
+    var scores = '';
+    for(var i=0;i<localHighScores.length;i++) {
+        scores += '<li>' + 'pairs found: ' + localHighScores[i].foundPairs + ' & time left: ' + localHighScores[i].remaining + '</li>';
+    }
+    $('#topscores').html(scores);
 }
 
 function getNumberOfPairsFound() {
 	return foundCards.length / 2;
 }
 
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
+// source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
 // not all browsers support indexOf (*kuch* IE)
 function removeElementFromArray(array, element) {
 	var index = array.indexOf(element);
@@ -89,8 +97,34 @@ function isFinished() {
 function handleFinishedGame() {
 	stopTimers();
 	running = false;
-	// do stuff with highscores etc.
+    // do stuff with highscores etc.
+    updateHighscores();
+}
 
+
+function updateHighscores() {
+    // updates the internal variables and the display
+    var localHighScores = highScores[difficulty]
+    localHighScores.push({foundPairs:getNumberOfPairsFound(), remaining:timeLeft});
+    for(var i=localHighScores.length-1;i>0;i--) {
+        if(localHighScores[i].foundPairs > localHighScores[i-1].foundPairs) {
+            var temp = localHighScores[i]
+            localHighScores[i] = localHighScores[i-1];
+            localHighScores[i+1] = temp;
+        }
+        if(localHighScores[i].foundPairs === localHighScores[i-1].foundPairs) {
+            if(localHighScores[i].remaining > localHighScores[i-1].remaining) {
+                var temp = localHighScores[i]
+                localHighScores[i] = localHighScores[i-1];
+                localHighScores[i-1] = temp;
+            }
+        }
+    }
+    if (localHighScores.length > 5) {
+        localHighScores.pop(); // delete the smallest element from the array
+    }
+    highScores[difficulty] = localHighScores;
+    showHighscores(); // show the new highscores in the display
 }
 
 function stopTimers() {
@@ -119,7 +153,7 @@ function startGameTimer() {
 }
 
 function initVariables() {
-	timeLeft = (difficulty * 30) + 10; // adjust the time here
+	timeLeft = (difficulty * 40) + 20; // adjust the time here
 	timeLeftModifiedWidth = 185/timeLeft; // 185 is width of the button
 	foundCards = [];
 	openCardOne = null;
@@ -172,7 +206,6 @@ function closeCards() {
 	$('.card').css('background-color', '#' + colourClosed).text(closedCardText);
 }
 
-// TODO fix the removing of cards that are found
 function foundCardDuo(card1, card2) { 
 	// change class so the cards will not flip back
 	foundCards.push(card1.attr('class', 'foundCard'));
@@ -190,10 +223,6 @@ function makeCardsClickable() {
 	});
 }
 
-function makeFoundCardsNotClickable() {
-	$('.foundCard').click(false);
-}
-
 function generateCards(fieldSize) {
 	var possibleCards = [];
 	for(var i=0; i<(fieldSize*fieldSize)/2;i++) {
@@ -201,7 +230,7 @@ function generateCards(fieldSize) {
 		possibleCards.push(String.fromCharCode(97+i));
 	}
 	cardsValues = shuffle(possibleCards);
-	console.log(cardsValues); // for debugging purposes
+	// console.log(cardsValues); // for debugging purposes
 }
 
 function buildCards(fieldSize) {
@@ -230,12 +259,11 @@ function initGame(fieldSize) {
 	running = true;
 }
 
-$('#size').on('change', showHighscores);
-
 $(document).ready(function () {
 	$('#opnieuw').click(function () {
 		size = $('#size').val();
 		difficulty = (size / 2) - 1 // 2, 4, 6 --> 0, 1, 2 for array indexing 
 		initGame(size);
-	});
+    });
+    $('#size').on('change', showHighscores);
 });

@@ -1,0 +1,38 @@
+/* Property of Hanzehogeschool Groningen */
+
+body { width:90vw; height:90vh; padding:0; margin:0; font-family:Skia,Verdana,sans-serif; text-align:center; }  
+
+header.span { display:table-cell; }
+
+table#speelVeld { table-layout:fixed;   margin:0 auto; }
+table#speelVeld td { cursor:pointer; text-align:center; color:white; font-size:large; font-weight:bold; }  
+
+table#meta { position:fixed; right:4vw; top:10vw;  width: 25vw; height:70vh; }
+table#meta td { vertical-align:top; text-align:left; padding:1%; }
+
+@media only screen and (orientation:landscape) {
+	table#speelVeld { width:80vh; height:80vh; border-spacing:1vh;}
+}
+
+@media only screen and (orientation:portrait) {
+	table#speelVeld { width:70vw; height:70vw; border-spacing:1vw;}
+}
+
+td.inactive { background-color:red; }
+td.active { background-color:green; }
+td.found{ background-color:purple; cursor:default; }
+
+button {width: 100px}
+
+#myTime {
+	position: relative;
+	width: 200px;
+	height: 30px;
+	background-color: #ddd;
+}
+
+#timeLeft {
+	width: 185px;
+	height: 20px;
+	background-color: #4CAF50;
+}

@@ -1,0 +1,85 @@
+<!-- Property of hanzehogeschool Groningen -->
+<!-- Forked by Gijs Entius -->
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8"/>
+  <title>Javascript memory</title>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.0.4/jscolor.js"></script>
+  <script type="text/javascript" src="memory.js"></script>
+  <link rel="stylesheet" type="text/css" href="memory.css">
+</head>
+
+<body>
+<header>
+  <h2>Javascript memory</h2>
+  <div>Verlopen tijd: <span id="tijd">0</span> seconden.<br/>
+  Gevonden kaart-paren: <span id="gevonden">0</span><br>
+  Resterende toontijd: <br>
+  <button id="myTime"><div id="timeLeft"></div></button><br/>
+  </div>
+</header>
+
+<div id="main">
+<div>
+  <table id="speelVeld"></table>
+
+<table id="meta">
+  <tr><td>
+    <b>Top vijf</b>
+    <ol id="topscores"></ol>
+    <b>Gemiddelde speeltijd:</b> <span id="gemiddeld">0s (+0s)</span><br/><br/>
+    <b>Karakter op kaarten:</b> 
+      <select name="character" id="character">
+        <option value="*">*</option>
+        <option value="#">#</option>
+        <option value="@">@</option>
+        <option value="&">&</option>
+        <option value="%">%</option>
+        <option value="X">X</option>
+      </select>
+    <br>
+    <b>Afmeting bord:</b><select name="size" id ="size">
+        <option value=2>2</option>
+        <option value=4>4</option>
+        <option value=6 selected>6</option>
+    </select>
+    </td></tr>
+    <tr><td>
+	    <button class="jscolor
+	    	{valueElement:'valueinactive', 
+	    	 styleElement:'styleInactive', 
+	    	 onFineChange:'setColor(\'td.inactive\')'}">
+	    Kaartkleur
+		</button>
+		<input type="hidden" id="valueinactive" value="ff0000"><input id="styleInactive">
+  	<br>
+	    <button class="jscolor
+	    	{valueElement:'valueactive', 
+	    	 styleElement:'styleActive', 
+	    	 onFineChange:'setColor(\'td.active\')'}">
+	    Open 
+		</button>
+		<input type="hidden" id="valueactive" value="008C00"><input id="styleActive">
+  	<br>
+	    <button class="jscolor
+	    	{valueElement:'valuefound', 
+	    	 styleElement:'styleFound', 
+	    	 onFineChange:'setColor(\'td.found\')'}">
+	    Gevonden 
+		</button>
+		<input type="hidden" id="valuefound" value="800080"><input id="styleFound">
+	</td></tr>
+  <tr><td>
+  <script>
+  </script>
+  <button id="opnieuw">Nieuw Spel</button>
+  </td></tr>
+</table>
+ 
+</div>
+</div>
+</body>
+</html>
